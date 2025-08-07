@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import structlog
 from services.logger import configure_logging
-from api.routes import router
+from api.routes import router 
 
 # Configure structured logging
 configure_logging()
