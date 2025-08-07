@@ -63,6 +63,28 @@ Uploaded documents (PDFs) are processed through the following pipeline:
 - Session-based caching for same conversation ID
 - Time-to-live (TTL) expiration for cache invalidation
 
+
+
+```mermaid
+graph LR
+    %% Document Ingestion Flow
+    A[📄 Upload PDF] --> B[✂️ Split into Chunks]
+    B --> C[🔢 Generate Embeddings]
+    C --> D[💾 Store in Vector DB]
+    
+    %% Query Processing Flow
+    E[💬 User Question] --> F[🔍 Search Similar Chunks]
+    F --> G[📝 Build Context]
+    G --> H[🤖 LLM Response]
+    
+    %% Storage Connection
+    D --> I[(📊 Vector Database)]
+    F --> I
+    
+    %% Final Output
+    H --> J[✅ Answer to User]
+```
+
 ## 🚀 Getting Started
 
 ### Prerequisites
