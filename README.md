@@ -1,97 +1,170 @@
-\documentclass{article}
-\usepackage{geometry}
-\usepackage{longtable}
-\usepackage{hyperref}
-\geometry{margin=1in}
+# RAG-Based Conversational AI Infrastructure
 
-\title{RAG-Based Conversational AI Infrastructure}
-\author{}
-\date{}
+## Overview
 
-\begin{document}
+This project provides an AI-powered chatbot backend infrastructure using Retrieval-Augmented Generation (RAG). It supports document ingestion, vector embeddings, and natural language querying to create intelligent conversational experiences.
 
-\maketitle
+### Key Capabilities
+- 📄 Document ingestion (PDFs)
+- 🔍 Vector embeddings using `all-mpnet-base-v2`
+- 💾 Vector storage with Chroma
+- 🤖 Natural language querying with `llama3` LLM
+- 🚀 REST API built with FastAPI
+- 💻 Client frontend using Streamlit
 
-\section*{Overview}
+The system supports multi-turn conversations with conversation ID tracking to avoid redundant ingestion and provides efficient session management.
 
-This project provides an AI-powered chatbot backend infrastructure using Retrieval-Augmented Generation (RAG). It supports:
+## ✨ Features
 
-\begin{itemize}
-    \item Document ingestion (PDFs)
-    \item Vector embeddings using \texttt{all-mpnet-base-v2}
-    \item Vector storage with Chroma
-    \item Natural language querying with \texttt{llama3} LLM
-    \item REST API built with FastAPI
-    \item Client frontend using Streamlit
-\end{itemize}
+- **Document Processing**: Upload and ingest documents via REST API
+- **Persistent Storage**: Vector store with Chroma for document embeddings
+- **Smart Embeddings**: Sentence Transformers using `all-mpnet-base-v2` model
+- **Advanced Generation**: `llama3` language model for contextual responses
+- **Async Architecture**: Pipeline initialization and ingestion caching
+- **Session Management**: Conversation tracking to avoid repeated ingestion
+- **Comprehensive Logging**: Debug and trace capabilities
+- **File Handling**: Robust upload and storage management
 
-The system supports multi-turn conversations with conversation ID tracking to avoid redundant ingestion.
+## 🛠️ Technology Stack
 
-\section*{Features}
+| Component | Technology / Model |
+|-----------|-------------------|
+| **Backend Framework** | FastAPI |
+| **Async Concurrency** | asyncio |
+| **Vector Store** | Chroma |
+| **Embedding Model** | all-mpnet-base-v2 |
+| **Language Model (LLM)** | llama3 |
+| **Data Validation** | Pydantic |
+| **ASGI Server** | Uvicorn |
+| **Client UI** | Streamlit |
+| **HTTP Client** | Requests (in Streamlit) |
 
-\begin{itemize}
-    \item Upload and ingest documents via API
-    \item Persistent vector store with Chroma
-    \item Embedding using Sentence Transformers (\texttt{all-mpnet-base-v2})
-    \item Generation using \texttt{llama3} language model
-    \item Async pipeline initialization and ingestion caching
-    \item Conversation session management to avoid repeated ingestion
-    \item Logging for debugging and tracing
-    \item File upload and storage handling
-\end{itemize}
+## 🏗️ Architecture & Workflow
 
-\section*{Tool Stack}
+### 1. Document Ingestion
+Uploaded documents (PDFs) are processed through the following pipeline:
+- Documents are saved to local storage
+- Content is extracted and chunked
+- Embeddings are generated using the embedding model
+- Vectors are stored in Chroma vector database
 
-\begin{longtable}{|l|l|}
-\hline
-\textbf{Component} & \textbf{Technology / Model} \\
-\hline
-Backend Framework & FastAPI \\
-Async Concurrency & asyncio \\
-Vector Store & Chroma \\
-Embedding Model & all-mpnet-base-v2 \\
-Language Model (LLM) & llama3 \\
-Data Validation & Pydantic \\
-File \& Storage & Python \texttt{os}, \texttt{shutil} \\
-Logging & Custom logger (\texttt{services.logger}) \\
-ASGI Server & Uvicorn \\
-Client UI & Streamlit \\
-HTTP Client & Requests (Streamlit) \\
-\hline
-\end{longtable}
+### 2. Pipeline Initialization
+- Global RAG pipeline instance initialized asynchronously
+- On-demand startup or initialization
+- Prevents repeated ingestion through caching mechanisms
 
-\section*{Architecture \& Workflow}
+### 3. Chat Request Processing
+- Each request includes conversation ID for session tracking
+- Pipeline queries vector store for relevant context
+- LLM generates contextual responses based on retrieved information
 
-\begin{enumerate}
-    \item \textbf{Document ingestion:}  
-    Uploaded documents (PDFs) are saved, embedded using the embedding model, and stored in Chroma vector DB.
-    
-    \item \textbf{Pipeline Initialization:}  
-    A global RAG pipeline instance is initialized asynchronously on startup or on-demand, avoiding repeated ingestion.
-    
-    \item \textbf{Chat Requests:}  
-    Each chat request includes a conversation ID to track sessions. The pipeline queries the vector store and LLM to generate contextual responses.
-    
-    \item \textbf{Ingestion Caching:}  
-    Ingestion results are cached in memory to avoid redundant ingestion for the same session. The pipeline reinitializes only after a time-to-live (TTL) expires.
-\end{enumerate}
+### 4. Ingestion Caching
+- Results cached in memory to avoid redundant processing
+- Session-based caching for same conversation ID
+- Time-to-live (TTL) expiration for cache invalidation
 
-\section*{Getting Started}
+## 🚀 Getting Started
 
-\begin{enumerate}
-    \item Clone the repository.
-    \item Install dependencies (e.g., \texttt{fastapi}, \texttt{uvicorn}, \texttt{pydantic}, \texttt{chromadb}, \texttt{sentence-transformers}, \texttt{streamlit}).
-    \item Run backend server with Uvicorn.
-    \item Launch Streamlit client for UI interaction.
-\end{enumerate}
+### Prerequisites
+- Python 3.8+
+- Required dependencies (see installation steps)
 
-\section*{Future Improvements}
+### Installation
 
-\begin{itemize}
-    \item Persist ingestion cache to disk or database for true persistence across restarts.
-    \item Add intent classification to detect ingestion commands in chat.
-    \item Enhance session tracking with Redis or database.
-    \item Secure file uploads and API endpoints.
-\end{itemize}
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd rag-conversational-ai
+   ```
 
-\end{document}
+2. **Install dependencies**
+   ```bash
+   pip install fastapi uvicorn pydantic chromadb sentence-transformers streamlit requests
+   ```
+
+3. **Run the backend server**
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+4. **Launch the Streamlit client**
+   ```bash
+   streamlit run streamlit_app.py
+   ```
+
+### Usage
+
+1. Access the Streamlit interface in your browser (typically `http://localhost:8501`)
+2. Upload PDF documents through the interface
+3. Start conversing with your documents using natural language queries
+4. The system will provide contextual responses based on the uploaded content
+
+## 📁 Project Structure
+
+```
+RAG_APP/
+├── venv/                          # Virtual environment
+├── rag-chatbot/
+│   └── backend/
+│       ├── __pycache__/           # Python cache files
+│       ├── api/
+│       │   ├── __pycache__/
+│       │   ├── temp/
+│       │   ├── chat.py            # Chat API endpoints
+│       │   ├── pipeline_state.json # Pipeline state configuration
+│       │   └── routes.py          # API route definitions
+│       ├── backend1.temp/
+│       │   └── sampledoc.pdf     # Sample document
+│       ├── data/                  # Data storage directory
+│       ├── factory/
+│       │   ├── __pycache__/
+│       │   └── rag_factory.py    # RAG pipeline factory
+│       ├── services/
+│       │   ├── __pycache__/
+│       │   ├── chunker.py        # Document chunking service
+│       │   ├── embedder.py       # Embedding generation service
+│       │   ├── ingest.py         # Document ingestion service
+│       │   ├── llm.py            # Language model service
+│       │   ├── loader.py         # Document loading service
+│       │   ├── logger.py         # Logging utilities
+│       │   ├── prompt.py         # Prompt templates
+│       │   ├── retrieval.py      # Document retrieval service
+│       │   └── vector_store.py   # Vector database operations
+│       ├── vector_store/
+│       │   └── 66c07bcd-9ed6-4b05-b30e-da7a159b9780/
+│       │       └── chroma.sqlite3 # Chroma vector database
+│       └── app.py                # Main FastAPI application
+├── ui/
+│   └── streamlit_app.py          # Streamlit frontend client
+├── README.md                     # Project documentation
+├── requirements.txt              # Python dependencies
+├── .gitattributes               # Git attributes configuration
+└── .gitignore                   # Git ignore rules
+```
+
+## 🔮 Future Improvements
+
+- [ ] **Persistent Caching**: Implement disk or database-based ingestion cache for true persistence across restarts
+- [ ] **Intent Classification**: Add detection for ingestion commands within chat interface
+- [ ] **Enhanced Session Tracking**: Integrate Redis or database for robust session management
+- [ ] **Security Enhancements**: Implement secure file uploads and API endpoint protection
+- [ ] **Multi-format Support**: Extend beyond PDFs to support various document formats
+- [ ] **User Authentication**: Add user management and access control
+- [ ] **Performance Monitoring**: Implement metrics and performance tracking
+- [ ] **Scalability**: Add support for distributed processing and load balancing
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+If you encounter any issues or have questions, please open an issue in the GitHub repository or contact the development team.
+
+---
+
+*Built with ❤️ using FastAPI, Streamlit, and state-of-the-art AI technologies*
