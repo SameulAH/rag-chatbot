@@ -179,14 +179,6 @@ RAG_APP/
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-If you encounter any issues or have questions, please open an issue in the GitHub repository or contact the development team.
-
 ---
 
 *Built with ❤️ using FastAPI, Streamlit, and state-of-the-art AI technologies*
